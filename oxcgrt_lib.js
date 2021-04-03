@@ -100,10 +100,12 @@ function checkRowDate(row, date){
 }
 
 function filterRegion(data, region){
+  var rc = col_index("RegionCode");
+  var cc = col_index("CountryCode");
   if (region) {
-    return data.filter(row => row[3] && (row[1] == region));
+    return data.filter(row => row[rc] && (row[cc] == region));
   } else {
-    return data.filter(row => row[3] == "");
+    return data.filter(row => row[rc] == "");
   }
 
 }
@@ -115,11 +117,13 @@ function date_entry_per_region(all_data, date, region){
 }
 
 function most_recent_entry_per_region(all_data, check_column = 1, region = ""){
+  var rn = col_index("RegionName");
+  var cn =  col_index("CountryName");
   var country_data = [];
   var current_country = ""; //(us ? "RegionName" : "CountryName");
   var last_row = all_data[0];
   all_data.shift();
-  var regCol = (region ? 2 : 0);
+  var regCol = (region ? rn : cn);
   function check_country(row){
     var country = row[regCol];
     if (country != current_country) {
@@ -162,6 +166,5 @@ function pretty_date_from_row(row) {
 
 function column_timeseries(data, region, column){
   region_data = data.filterRegion(data, region);
-  //function generate_timeseries_row(r, columns)
   new_data = region_data.map( r => [parse_date_from_row(r), r[column]]);
 }
